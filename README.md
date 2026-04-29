@@ -1926,6 +1926,12 @@ to use the appropriate firmware:
 ```
 modprobe liquidio fw_type=vsw
 ```
+Note this will attempt to re-initialize the local eMMC flash of the card, the flash will thereforth be used as 
+persistent storage for OVS DB and logfiles.
+The initial firmware download is logged to `dmesg`.  
+The further boot process of the NIC firmware will also print messages to the serial console on the card
+(a 3-pin serial port), further a debug console is enabled there.  
+Note: The 'debug' module parameter which is supposed to log to syslog appears to not work.
 
 Now, let's enable the SRIOV Virtual functions for the LiquidIO-II adapter. For this example, we'll enable 1 SRIOV VF
 for Physical Function 0:
@@ -1956,6 +1962,8 @@ To establish communication with the OVS control plane running on the NIC, we'll 
 channel using the DUT PF network interfaces. We'll first create a macvlan from both PF interfaces and
 then bond those macvlan interfaces. The resulting bond interface, called `lio-bond-mgmt` in this
 example, will be assigned with a Link Local IP 169.254.1.2.
+A phsyical link 'up' on the NIC ports is required for this macvlan access to work.
+
 
 For this example, the physical interfaces in DUT are p3p1 and p3p2. These names may differ depending upon
 udev rules in your system and physical slot in which the NIC is inserted.
